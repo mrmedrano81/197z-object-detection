@@ -4,7 +4,7 @@ Pillow
 torch
 torchvision
 matplotlib
-pycocotools
+pycocotools==2.0.4
 opencv-python
 imutils
 requests
