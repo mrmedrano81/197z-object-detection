@@ -1,16 +1,29 @@
 SETUP:
 
-!pip install -r requirements.txt
+<code>!pip install -r requirements.txt</code>
 
 TRAINING:
 
-!python train.py
+<code>!python train.py</code>
 
 EVALUATION/TESTING:
 
-!python test.py
+<code>!python test.py</code>
 
 WEBCAM DEMO:
 
-!python demo.py
+<code>!python demo.py</code>
 
+
+
+
+References:
+
+-training and finetuning modules/libraries:
+https://github.com/mrmedrano81/vision/tree/main/references/detection
+
+-model used:
+https://github.com/mrmedrano81/vision/blob/main/torchvision/models/detection/faster_rcnn.py
+
+-utility files used in generating dictionary files for dataloader:
+https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras/tree/master/chapter11-detection
