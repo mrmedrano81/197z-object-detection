@@ -22,11 +22,13 @@ def main():
     else:
         print('pretrained_model.pth already exists, skipping download...')
 
+    #Initialize test dataset 
     test_dict, _ = label_utils.build_label_dictionary("labels_test.csv")
     test_dataset = train.DrinksDataset(test_dict, transform=transforms.Compose([transforms.ToTensor()]))
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
+    #Initialize pretrained model and dataloader
     num_classes = 4
     loaded_model = train.custom_model_function(num_classes)
     loaded_model.load_state_dict(torch.load("pretrained_model.pth"))

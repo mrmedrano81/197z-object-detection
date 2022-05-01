@@ -1,15 +1,17 @@
+import os
 import numpy as np
 import torch
 import torch.utils.data
 import cv2
 from train import custom_model_function
 import imutils
+from datadl import download_url
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 print("Using GPU: ", torch.cuda.is_available())
 
 
-#download pretrained_model.pth
+#download and load pretrained_model.pth
 if not os.path.exists('pretrained_model.pth'):
     download_url("https://github.com/mrmedrano81/197Z-assignment-2/releases/download/v1.0/pretrained_model.pth", "pretrained_model.pth")
 else:
@@ -20,11 +22,13 @@ loaded_model = custom_model_function(num_classes)
 loaded_model.load_state_dict(torch.load("pretrained_model.pth"))
 loaded_model.eval()
 
+#initializing live capture
 cam = cv2.VideoCapture(0)
-
 while True:
     check, frame = cam.read()
     original = frame.copy()
+
+    #convert frame to tensor format for input to model
     frame = imutils.resize(frame, width=640, height=480)
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     frame = frame.transpose((2,0,1))
@@ -35,6 +39,7 @@ while True:
     with torch.no_grad():
       prediction = loaded_model(frame)
 
+    #extract necessary information for bounding boxes and corresponding labels
     tensor_bboxes = prediction[0].get('boxes')
     tensor_labels = prediction[0].get('labels')
 
@@ -65,7 +70,7 @@ while True:
 
     key = cv2.waitKey(1)
 
-    #esc key to exit
+    #enter Esc key to exit
     if key == 27:
         break
 
