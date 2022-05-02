@@ -16,6 +16,10 @@ WEBCAM DEMO:
 
 <code>!python demo.py</code>
 
+Notes:
+
+-The code assumes that torch, torchvision, and NVIDIA CUDA toolkit have been setup in the machine/environment being used to run it. Hence torch and torchvision are not included in the requirements.txt file in the setup.
+
 
 
 References:
