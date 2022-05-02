@@ -30,7 +30,7 @@ frame_width = int(cam.get(3))
 frame_height = int(cam.get(4))
 
 size = (frame_width, frame_height)
-result = cv2.VideoWriter(filename='demo.avi', fourcc=cv2.VideoWriter_fourcc(*'MJPG'), fps=30, frameSize=size, isColor=True)
+result = cv2.VideoWriter(filename='demo.mp4', fourcc=cv2.VideoWriter_fourcc(*'mp4v'), fps=30, frameSize=size, isColor=True)
 
 while True:
     check, frame = cam.read()
