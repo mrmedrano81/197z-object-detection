@@ -10,6 +10,7 @@ import torch.utils.data
 from PIL import Image
 import label_utils
 from datadl import extract_zip_files
+import random
 
 
 #custom model function for the fasterrcnn_mobilenet_v3_large_320_fpn
@@ -41,6 +42,11 @@ def adapt_label_dict(boxes):
         bxs.append(box)
     
     return bxs, labels, areas
+
+def seed_worker(worker_id):
+    worker_seed = torch.initial_seed() % 2**32
+    np.random.seed(worker_seed)
+    random.seed(worker_seed)
 
 class DrinksDataset(torch.utils.data.Dataset):
     def __init__(self, dictionary, transform=None):
@@ -85,6 +91,9 @@ class DrinksDataset(torch.utils.data.Dataset):
 
 if __name__ == "__main__":
 
+    g = torch.Generator()
+    g.manual_seed(0)
+
     #download drinks dataset
     if not os.path.exists('drinks'):
         print("Downloading drinks.zip file...")
@@ -111,13 +120,13 @@ if __name__ == "__main__":
 
     data_loader_train = torch.utils.data.DataLoader(
         train_dataset, batch_size=2, shuffle=True, num_workers=2,
-        collate_fn=utils.collate_fn)
+        collate_fn=utils.collate_fn, worker_init_fn=seed_worker, generator=g)
     
     #Initializing dataloader for testing
     data_loader_test = torch.utils.data.DataLoader(
         test_dataset, batch_size=1, shuffle=False, num_workers=0,
-        collate_fn=utils.collate_fn)
-
+        collate_fn=utils.collate_fn, worker_init_fn=seed_worker, generator=g)
+    
     #setting hyperparameters
     params = [p for p in model.parameters() if p.requires_grad]
 
@@ -127,9 +136,6 @@ if __name__ == "__main__":
 
     num_epochs = 12
 
-    torch.manual_seed(1)
-    torch.cuda.manual_seed_all(1)
-    
     #Initialize training
     for epoch in range(num_epochs):
 
@@ -140,6 +146,6 @@ if __name__ == "__main__":
     model.eval()
     engine.evaluate(model.cuda(), data_loader_test, device=device)
 
-    FILE = "model.pth"
+    FILE = "pretrained_model.pth"
     torch.save(model.state_dict(), FILE)
 

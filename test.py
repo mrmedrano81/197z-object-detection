@@ -10,6 +10,9 @@ from datadl import extract_zip_files, download_url
 
 def main():
 
+    g = torch.Generator()
+    g.manual_seed(0)
+
     #download drinks dataset
     if not os.path.exists('drinks'):
         print("Downloading drinks.zip file...")
@@ -39,10 +42,7 @@ def main():
 
     data_loader_test = torch.utils.data.DataLoader(
         test_dataset, batch_size=1, shuffle=False, num_workers=0,
-        collate_fn=utils.collate_fn)
-
-    torch.manual_seed(1)
-    torch.cuda.manual_seed_all(1)
+        collate_fn=utils.collate_fn, worker_init_fn=train.seed_worker, generator=g)
 
     engine.evaluate(loaded_model.cuda(), data_loader_test, device=device)
 
