@@ -28,7 +28,7 @@ References:
 >https://github.com/mrmedrano81/vision/tree/main/references/detection
 
 -model used:
->https://github.com/mrmedrano81/vision/blob/main/torchvision/models/detection/faster_rcnn.py
+>https://paperswithcode.com/paper/faster-r-cnn-towards-real-time-object
 
 -utility files used in generating dictionary files for dataloader:
 >https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras/tree/master/chapter11-detection
