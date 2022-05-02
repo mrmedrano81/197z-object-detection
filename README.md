@@ -1,18 +1,18 @@
 SETUP:
 
-><code>!pip install -r requirements.txt</code>
+<code>!pip install -r requirements.txt</code>
 
 TRAINING:
 
-><code>!python train.py</code>
+<code>!python train.py</code>
 
 EVALUATION/TESTING:
 
-><code>!python test.py</code>
+<code>!python test.py</code>
 
 WEBCAM DEMO:
 
-><code>!python demo.py</code>
+<code>!python demo.py</code>
 
 
 
