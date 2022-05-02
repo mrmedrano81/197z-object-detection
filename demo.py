@@ -26,6 +26,12 @@ loaded_model.eval()
 
 #initializing live capture
 cam = cv2.VideoCapture(0)
+frame_width = int(cam.get(3))
+frame_height = int(cam.get(4))
+
+size = (frame_width, frame_height)
+result = cv2.VideoWriter(filename='demo.avi', fourcc=cv2.VideoWriter_fourcc(*'MJPG'), fps=30, frameSize=size, isColor=True)
+
 while True:
     check, frame = cam.read()
     original = frame.copy()
@@ -44,37 +50,43 @@ while True:
     #extract necessary information for bounding boxes and corresponding labels
     tensor_bboxes = prediction[0].get('boxes')
     tensor_labels = prediction[0].get('labels')
+    tensor_scores = prediction[0].get('scores')
 
     for i in range(tensor_bboxes.size(dim=0)):
-      tensor_bbox = tensor_bboxes[i]
-      label_id = tensor_labels[i]
-      xmin = int(torch.IntTensor.item(tensor_bbox[0]))
-      ymin = int(torch.IntTensor.item(tensor_bbox[1]))
-      xmax = int(torch.IntTensor.item(tensor_bbox[2]))
-      ymax = int(torch.IntTensor.item(tensor_bbox[3]))
+      score = torch.FloatTensor.item(tensor_scores[i])
+      if score > 0.85:
+        tensor_bbox = tensor_bboxes[i]
+        label_id = tensor_labels[i]
+        xmin = int(torch.IntTensor.item(tensor_bbox[0]))
+        ymin = int(torch.IntTensor.item(tensor_bbox[1]))
+        xmax = int(torch.IntTensor.item(tensor_bbox[2]))
+        ymax = int(torch.IntTensor.item(tensor_bbox[3]))
 
-      text = ''
-      color = ()
-      if label_id == 1:
-        text = 'Summit'
-        color = (234, 40, 27)
-      if label_id == 2:
-        text = 'Coca Cola'
-        color = (97, 37, 216)
-      if label_id == 3:
-        text = 'Del Monte'
-        color = (94, 224, 232)
+        text = ''
+        color = ()
+        text_score = str(round(score*100, 2))
+        if label_id == 1:
+          text = 'Summit: ' + text_score
+          color = (234, 40, 27)
+        if label_id == 2:
+          text = 'Coca Cola: ' + text_score
+          color = (97, 37, 216)
+        if label_id == 3:
+          text = 'Del Monte: ' + text_score
+          color = (94, 224, 232)
 
-      cv2.rectangle(original, (xmin, ymax), (xmax, ymin), color, 2)
-      cv2.putText(original, text, (xmin, ymin-5), cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
+        cv2.rectangle(original, (xmin, ymax), (xmax, ymin), color, 2)
+        cv2.putText(original, text, (xmin, ymin-5), cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
     
+    result.write(original)
     cv2.imshow('demo [press "Esc" key to exit]', original)
-
+    
     key = cv2.waitKey(1)
 
     #enter Esc key to exit
     if key == 27:
         break
 
+result.release()
 cam.release()
 cv2.destroyAllWindows()
