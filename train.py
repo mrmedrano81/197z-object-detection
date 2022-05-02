@@ -88,7 +88,7 @@ if __name__ == "__main__":
     #download drinks dataset
     if not os.path.exists('drinks'):
         print("Downloading drinks.zip file...")
-        extract_zip_files("https://github.com/mrmedrano81/197z-object-detection/releases/download/v1.0/pretrained_model.pth", 'drinks.zip', 'drinks')
+        extract_zip_files("https://github.com/mrmedrano81/197z-object-detection/releases/download/v1.0/drinks.zip", 'drinks.zip', 'drinks')
         print("Download complete!")
     else:
         print('drinks directory already exists, skipping download...')
@@ -96,6 +96,10 @@ if __name__ == "__main__":
     #Initializing train dataset
     train_dict, _ = label_utils.build_label_dictionary("labels_train.csv")
     train_dataset = DrinksDataset(train_dict, transform=transforms.Compose([transforms.ToTensor()]))
+
+    #Initialize test dataset 
+    test_dict, _ = label_utils.build_label_dictionary("labels_test.csv")
+    test_dataset = DrinksDataset(test_dict, transform=transforms.Compose([transforms.ToTensor()]))
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
@@ -108,6 +112,11 @@ if __name__ == "__main__":
     data_loader_train = torch.utils.data.DataLoader(
         train_dataset, batch_size=2, shuffle=True, num_workers=2,
         collate_fn=utils.collate_fn)
+    
+    #Initializing dataloader for testing
+    data_loader_test = torch.utils.data.DataLoader(
+        test_dataset, batch_size=1, shuffle=False, num_workers=0,
+        collate_fn=utils.collate_fn)
 
     #setting hyperparameters
     params = [p for p in model.parameters() if p.requires_grad]
@@ -116,8 +125,11 @@ if __name__ == "__main__":
 
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.1)
 
-    num_epochs = 10
+    num_epochs = 12
 
+    torch.manual_seed(1)
+    torch.cuda.manual_seed_all(1)
+    
     #Initialize training
     for epoch in range(num_epochs):
 
@@ -125,5 +137,9 @@ if __name__ == "__main__":
 
         lr_scheduler.step()
     
+    model.eval()
+    engine.evaluate(model.cuda(), data_loader_test, device=device)
+
     FILE = "model.pth"
     torch.save(model.state_dict(), FILE)
+

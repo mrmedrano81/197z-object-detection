@@ -41,6 +41,9 @@ def main():
         test_dataset, batch_size=1, shuffle=False, num_workers=0,
         collate_fn=utils.collate_fn)
 
+    torch.manual_seed(1)
+    torch.cuda.manual_seed_all(1)
+
     engine.evaluate(loaded_model.cuda(), data_loader_test, device=device)
 
 if __name__ == '__main__':
