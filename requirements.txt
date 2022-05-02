@@ -1,8 +1,6 @@
 Cython
 numpy
 Pillow
-torch
-torchvision
 matplotlib
 pycocotools==2.0.4
 opencv-python

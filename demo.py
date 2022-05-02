@@ -13,7 +13,9 @@ print("Using GPU: ", torch.cuda.is_available())
 
 #download and load pretrained_model.pth
 if not os.path.exists('pretrained_model.pth'):
+    print("Downloading pretrained_model.pth file...")
     download_url("https://github.com/mrmedrano81/197Z-assignment-2/releases/download/v1.0/pretrained_model.pth", "pretrained_model.pth")
+    print("Download complete!")
 else:
     print('pretrained_model.pth already exists, skipping download...')
 

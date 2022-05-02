@@ -12,13 +12,17 @@ def main():
 
     #download drinks dataset
     if not os.path.exists('drinks'):
+        print("Downloading drinks.zip file...")
         extract_zip_files("https://github.com/mrmedrano81/197z-object-detection/releases/download/v1.0/drinks.zip", 'drinks.zip', 'drinks')
+        print("Download complete!")
     else:
         print('drinks directory already exists, skipping download...')
 
     #download pretrained_model.pth
     if not os.path.exists('pretrained_model.pth'):
+        print("Downloading pretrained_model.pth file...")
         download_url("https://github.com/mrmedrano81/197z-object-detection/releases/download/v1.0/pretrained_model.pth", "pretrained_model.pth")
+        print("Download complete!")
     else:
         print('pretrained_model.pth already exists, skipping download...')
 

@@ -87,7 +87,9 @@ if __name__ == "__main__":
 
     #download drinks dataset
     if not os.path.exists('drinks'):
+        print("Downloading drinks.zip file...")
         extract_zip_files("https://github.com/mrmedrano81/197z-object-detection/releases/download/v1.0/pretrained_model.pth", 'drinks.zip', 'drinks')
+        print("Download complete!")
     else:
         print('drinks directory already exists, skipping download...')
 
