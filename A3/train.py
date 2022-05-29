@@ -76,6 +76,7 @@ if __name__ == "__main__":
                       max_epochs=args.max_epochs, precision=16 if args.accelerator == 'gpu' else 32,)
     
     trainer.fit(model, datamodule=datamodule)
+    trainer.test(model, datamodule=datamodule)
 
     trainer.save_checkpoint("kwst_pretrained.ckpt")
     model = model.load_from_checkpoint("kwst_pretrained.ckpt")
