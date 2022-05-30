@@ -10,4 +10,4 @@ TRAINING:
 
 GUI WITH MICROPHONE INPUT DEMO:
 
-<code>!python kws_infer.py</code>
+<code>!python kws-infer.py</code>
