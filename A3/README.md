@@ -1,13 +1,11 @@
-## Michael Medrano SN: 201804341
-
-SETUP:
+### SETUP:
 
 <code>!pip install -r requirements.txt</code>
 
-TRAINING:
+### TRAINING:
 
 <code>!python train.py</code>
 
-GUI WITH MICROPHONE INPUT DEMO:
+### GUI WITH MICROPHONE INPUT DEMO:
 
 <code>!python kws-infer.py</code>
